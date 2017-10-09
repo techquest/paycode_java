@@ -19,8 +19,8 @@ public class InterswitchTestDriver {
 		HashMap<String, String> paycodeResponse = new HashMap<String, String>();
 		
 		
-//		paycodeResponse = generatePaycode();
-		paycodeResponse = generateBulkPaycode();
+		paycodeResponse = generatePaycode();
+//		paycodeResponse = generateBulkPaycode();
 		
 		
 
@@ -40,17 +40,17 @@ public class InterswitchTestDriver {
 		extraHeaders.put("frontEndPartnerId", "455");
 		String httpMethod = ConstantUtils.POST;
 		
-		String pan = "";//"0000000000000000";
-		String expDate = "";
-		String cvv2 = "";
+		String pan = "5060990580000217499";//"0000000000000000";
+		String expDate = "2004";
+		String cvv2 = "111";
 		String pin = "1111";
 		
-		double amount = 100000;
-		String ttid = "812";
-		String msisdn = "2348090673520";
-		String paymentMethodIdentifier = "FEED1FCDDBD14AA1822FD1B9254B4C43";
+		String amount = "2000000";
+		String ttid = "809";
+		String msisdn = "2348124888436";
+		String paymentMethodIdentifier = "E192F3F3B3BA4596BC9704C44EA801BC";
 		String payWithMobileChannel = "ATM";
-		String tokenLifeTimeInMinutes = "90";
+		String tokenLifeTimeInMinutes = "1440";
 		String oneTimePin = "1234";
 		
 		HashMap<String,String> additionalSecureData = new HashMap<String, String>();
@@ -62,6 +62,7 @@ public class InterswitchTestDriver {
 		HashMap<String, String> secureParameters = interswitchPwm.getSecureData(pan, expDate, cvv2, pin,additionalSecureData,publicCertPath);
 		String pinData = secureParameters.get(ConstantUtils.PINBLOCK);
 		String secureData = secureParameters.get(ConstantUtils.SECURE);
+		String macData =  secureParameters.get(ConstantUtils.MACDATA);
 		
 		String resourceUrl = ConstantUtils.PWM_BASE_URL +msisdn+"/tokens";
 		
@@ -76,7 +77,7 @@ public class InterswitchTestDriver {
 		json.put("secure", secureData);
 		String jsonData = json.toString();
 		
-		interswitchResponse = interswitchPwm.send(resourceUrl, httpMethod, jsonData,extraHeaders);
+		interswitchResponse = interswitchPwm.sendWithInterswitchAuth(resourceUrl, httpMethod, jsonData, extraHeaders);
 		return interswitchResponse;
 	}
 	
@@ -128,7 +129,7 @@ public class InterswitchTestDriver {
 		String referenceId =  " ";
 		do {
 			referenceId =  String.valueOf(random.nextInt(999999999));
-		}while(!referenceId.startsWith("0"));
+		}while(referenceId.startsWith("0"));
 		
 		String resourceUrl = ConstantUtils.PWM_BULK_BASE_URL +"tokens";
 		
@@ -147,12 +148,13 @@ public class InterswitchTestDriver {
 		json.put("subscriberId", msisdn);
 		json.put("tokenLifeTimeInMinutes", tokenLifeTimeInMinutes);
 		json.put("ttid", ttid);
+		json.put("macData", macData);
 
 		
 		
 		String jsonData = json.toString();
 		
-		interswitchResponse = interswitchPwm.send(resourceUrl, httpMethod, jsonData,extraHeaders);
+		interswitchResponse = interswitchPwm.sendWithInterswitchAuth(resourceUrl, httpMethod, jsonData, extraHeaders);
 		return interswitchResponse;
 	}
 

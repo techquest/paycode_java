@@ -202,13 +202,14 @@ public class Remote {
 			        con.setRequestProperty(pair.getKey(),pair.getValue());
 			    }
 			}
-
+			wr= new OutputStreamWriter(con.getOutputStream());
+			wr.write(jsonText.toString());
+			wr.close();
+			responseCode = con.getResponseCode();
 			
 		}
-		wr= new OutputStreamWriter(con.getOutputStream());
-		wr.write(jsonText.toString());
-		wr.close();
-		responseCode = con.getResponseCode();
+		
+		
 		InputStream inputStream;
 		StringBuffer response = new StringBuffer();
 		int c;

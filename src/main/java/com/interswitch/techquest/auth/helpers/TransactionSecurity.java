@@ -209,7 +209,7 @@ public class TransactionSecurity {
         return secureData;
     }
     
-    public HashMap<String, String> getSecureData(String publicCertPath, String pan, String expDate, String cvv, String pin, HashMap<String,String>transactionParameters) throws Exception {
+    public HashMap<String, String> getSecureDataForBulkPaycode(String publicCertPath, String pan, String expDate, String cvv, String pin, HashMap<String,String>transactionParameters) throws Exception {
 
         HashMap<String, String> secureData = new HashMap<String, String>();
 
@@ -341,6 +341,75 @@ public class TransactionSecurity {
 
         RSAEngine engine = new RSAEngine();
         RSAKeyParameters publicKeyParameters = getPublicRSAKey(publicModulus, publicExponent);
+        engine.init(true, publicKeyParameters);
+        byte[] encryptedSecureBytes = engine.processBlock(secureBytes, 0, secureBytes.length);
+        byte[] encodedEncryptedSecureBytes = Hex.encode(encryptedSecureBytes);
+        String encrytedSecure = new String(encodedEncryptedSecureBytes);
+
+        zeroise(secureBytes);
+
+        String pinBlock = getPINBlock(pin, cvv, expDate, keyBytes);
+
+        secureData.put(Interswitch.SECURE, encrytedSecure);
+        secureData.put(Interswitch.PINBLOCK, pinBlock);
+
+        return secureData;
+    }
+    public HashMap<String, String> getSecureData(String publicCertPath, String pan, String expDate, String cvv, String pin, HashMap<String,String>transactionParameters) throws Exception {
+
+        HashMap<String, String> secureData = new HashMap<String, String>();
+
+        byte[] secureBytes = new byte[64];
+        byte[] headerBytes = new byte[1];
+        byte[] formatVersionBytes = new byte[1];
+        byte[] macVersionBytes = new byte[1];
+        byte[] pinDesKey = new byte[16];
+        byte[] macDesKey = new byte[16];
+        byte[] macBytes = new byte[4];
+        byte[] customerIdBytes = new byte[10];
+        byte[] footerBytes = new byte[1];
+        byte[] otherBytes = new byte[14];
+        byte[] keyBytes = generateKey();
+
+        System.arraycopy(customerIdBytes, 0, secureBytes, 35, 10);
+        System.arraycopy(macBytes, 0, secureBytes, 45, 4);
+        System.arraycopy(otherBytes, 0, secureBytes, 49, 14);
+        System.arraycopy(footerBytes, 0, secureBytes, 63, 1);
+
+        headerBytes = HexConverter("4D");
+        formatVersionBytes = HexConverter("10");
+        macVersionBytes = HexConverter("10");
+
+        pinDesKey = keyBytes;
+
+        if (pan != null && pan != "") {
+            int panDiff = 20 - pan.length();
+            String panString = panDiff + pan;
+            int panlen = 20 - panString.length();
+            for (int i = 0; i < panlen; i++) {
+                panString += "F";
+            }
+
+            customerIdBytes = HexConverter(padRight(panString, 20));
+
+        }
+
+        String macData = getMACDataVersion9(transactionParameters);
+        macBytes = Hex.decode(getMAC(macData, macDesKey, 11));
+        footerBytes = HexConverter("5A");
+
+        System.arraycopy(headerBytes, 0, secureBytes, 0, 1);
+        System.arraycopy(formatVersionBytes, 0, secureBytes, 1, 1);
+        System.arraycopy(macVersionBytes, 0, secureBytes, 2, 1);
+        System.arraycopy(pinDesKey, 0, secureBytes, 3, 16);
+        System.arraycopy(macDesKey, 0, secureBytes, 19, 16);
+        System.arraycopy(customerIdBytes, 0, secureBytes, 35, 10);
+        System.arraycopy(macBytes, 0, secureBytes, 45, 4);
+        System.arraycopy(otherBytes, 0, secureBytes, 49, 14);
+        System.arraycopy(footerBytes, 0, secureBytes, 63, 1);
+
+        RSAEngine engine = new RSAEngine();
+        RSAKeyParameters publicKeyParameters = getRSAKeyParameters(publicCertPath);
         engine.init(true, publicKeyParameters);
         byte[] encryptedSecureBytes = engine.processBlock(secureBytes, 0, secureBytes.length);
         byte[] encodedEncryptedSecureBytes = Hex.encode(encryptedSecureBytes);

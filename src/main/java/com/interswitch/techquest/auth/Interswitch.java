@@ -177,7 +177,7 @@ public class Interswitch {
     	
     	if (responseCode.equalsIgnoreCase("200")) 
     	{
-    		HashMap<String, String> headers = RequestHeaders.getBearerSecurityHeaders(clientId, clientSecret, accessToken.get(Interswitch.ACCESS_TOKEN), url, httpMethod);
+    		HashMap<String, String> headers = RequestHeaders.getInterswitchSecurityHeaders(clientId, clientSecret, url, httpMethod);
         	if(httpMethod.equalsIgnoreCase("GET"))
         	{
         		return Remote.sendGET(url, headers,extraHttpHeaders);
@@ -193,6 +193,25 @@ public class Interswitch {
     	
     	return accessToken;
     }
+    
+    public HashMap<String, String> sendWithInterswitchAuth(String uri, String httpMethod, String jsonData,HashMap<String, String> extraHttpHeaders) throws Exception
+    {
+    	String url = baseUrl+uri;
+    	HashMap<String, String> headers = RequestHeaders.getInterswitchSecurityHeaders(clientId, clientSecret, url, httpMethod);
+    	
+        	if(httpMethod.equalsIgnoreCase("GET"))
+        	{
+        		return Remote.sendGET(url, headers,extraHttpHeaders);
+        	}
+        	else if (httpMethod.equalsIgnoreCase("POST"))
+        	{
+        		return Remote.sendPOST(jsonData, url, headers,extraHttpHeaders);
+        	}
+    	
+    	
+    	return headers;
+    }
+    
 //    Send to Remote uri,httpMethod,jsonData,additonalSignedParameters
     public HashMap<String, String> send(String uri, String httpMethod, String jsonData,String signedParameters) throws Exception
     {

@@ -50,7 +50,7 @@ public class RequestHeaders {
         return interswitchAuth;
     }
     
-    public static HashMap<String, String> getBearerSecurityHeaders(String clientId, String clientSecretKey, String accessToken, String resourceUrl, String httpMethod) throws Exception {
+    public static HashMap<String, String> getInterswitchSecurityHeaders(String clientId, String clientSecretKey, String resourceUrl, String httpMethod) throws Exception {
         HashMap<String, String> interswitchAuth = new HashMap<String, String>();
 
         long timestamp = generateTimestamp();
@@ -61,6 +61,26 @@ public class RequestHeaders {
         byte[] auth = org.apache.commons.codec.binary.Base64.encodeBase64(clientId.getBytes());
         
         String authorization = Interswitch.ISWAUTH_AUTHORIZATION_REALM + " " + new String(auth);
+
+        interswitchAuth.put(Interswitch.AUTHORIZATION, authorization);
+        interswitchAuth.put(Interswitch.TIMESTAMP, String.valueOf(timestamp));
+        interswitchAuth.put(Interswitch.NONCE, nonce);
+        interswitchAuth.put(Interswitch.SIGNATURE_METHOD, Interswitch.SIGNATURE_METHOD_VALUE);
+        interswitchAuth.put(Interswitch.SIGNATURE, signature);
+
+        return interswitchAuth;
+    }
+    public static HashMap<String, String> getBearerSecurityHeaders(String clientId, String clientSecretKey, String accessToken, String resourceUrl, String httpMethod) throws Exception {
+        HashMap<String, String> interswitchAuth = new HashMap<String, String>();
+
+        long timestamp = generateTimestamp();
+        String nonce = generateNonce();
+        String signature = getSignature(clientId, clientSecretKey, resourceUrl, httpMethod, timestamp, nonce);
+
+        String authorization = Interswitch.BEARER_AUTHORIZATION_REALM + " " + accessToken;
+//        byte[] auth = org.apache.commons.codec.binary.Base64.encodeBase64(clientId.getBytes());
+        
+//        String authorization = Interswitch.ISWAUTH_AUTHORIZATION_REALM + " " + new String(auth);
 
         interswitchAuth.put(Interswitch.AUTHORIZATION, authorization);
         interswitchAuth.put(Interswitch.TIMESTAMP, String.valueOf(timestamp));
