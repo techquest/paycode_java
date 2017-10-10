@@ -7,7 +7,7 @@ import java.util.Random;
 import org.json.JSONObject;
 
 import com.interswitch.techquest.auth.helpers.Entries;
-import com.interswitch.techquest.auth.utils.ConstantUtils;
+import com.interswitch.techquest.paycode.Constants;
 
 public class InterswitchTestDriver {
 
@@ -38,7 +38,7 @@ public class InterswitchTestDriver {
 		HashMap<String, String> interswitchResponse;
 		HashMap<String, String> extraHeaders = new HashMap<String, String>();
 		extraHeaders.put("frontEndPartnerId", "455");
-		String httpMethod = ConstantUtils.POST;
+		String httpMethod = Constants.POST;
 		
 		String pan = "5060990580000217499";//"0000000000000000";
 		String expDate = "2004";
@@ -60,11 +60,11 @@ public class InterswitchTestDriver {
 		
 		
 		HashMap<String, String> secureParameters = interswitchPwm.getSecureData(pan, expDate, cvv2, pin,additionalSecureData,publicCertPath);
-		String pinData = secureParameters.get(ConstantUtils.PINBLOCK);
-		String secureData = secureParameters.get(ConstantUtils.SECURE);
-		String macData =  secureParameters.get(ConstantUtils.MACDATA);
+		String pinData = secureParameters.get(Constants.PINBLOCK);
+		String secureData = secureParameters.get(Constants.SECURE);
+		String macData =  secureParameters.get(Constants.MACDATA);
 		
-		String resourceUrl = ConstantUtils.PWM_BASE_URL +msisdn+"/tokens";
+		String resourceUrl = Constants.PWM_BASE_URL +msisdn+"/tokens";
 		
 		JSONObject json = new JSONObject();
 		json.put("amount", amount);
@@ -87,7 +87,7 @@ public class InterswitchTestDriver {
 		HashMap<String, String> extraHeaders = new HashMap<String, String>();
 		Random random = new Random();
 		extraHeaders.put("frontEndPartnerId", "455");
-		String httpMethod = ConstantUtils.POST;
+		String httpMethod = Constants.POST;
 		
 		String pan = "5060990580000217499";//"0000000000000000";
 		String expDate = "2004";
@@ -123,15 +123,15 @@ public class InterswitchTestDriver {
 		list.add(entries[1]);
 		
 		HashMap<String, String> secureParameters = interswitchPwm.getSecureData(pan, expDate, cvv2, pin,additionalSecureData,publicCertPath);
-		String pinBlock = secureParameters.get(ConstantUtils.PINBLOCK);
-		String secureData = secureParameters.get(ConstantUtils.SECURE);
-		String macData = secureParameters.get(ConstantUtils.MACDATA);
+		String pinBlock = secureParameters.get(Constants.PINBLOCK);
+		String secureData = secureParameters.get(Constants.SECURE);
+		String macData = secureParameters.get(Constants.MACDATA);
 		String referenceId =  " ";
 		do {
 			referenceId =  String.valueOf(random.nextInt(999999999));
 		}while(referenceId.startsWith("0"));
 		
-		String resourceUrl = ConstantUtils.PWM_BULK_BASE_URL +"tokens";
+		String resourceUrl = Constants.PWM_BULK_BASE_URL +"tokens";
 		
 		JSONObject json = new JSONObject();
 		json.put("additionalInfo", addition);

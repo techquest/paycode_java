@@ -1,6 +1,6 @@
-package com.interswitch.techquest.auth.utils;
+package com.interswitch.techquest.paycode;
 
-public class ConstantUtils {
+public class Constants {
 
 	public static final String TIMESTAMP = "TIMESTAMP";
 	public static final String NONCE = "NONCE";

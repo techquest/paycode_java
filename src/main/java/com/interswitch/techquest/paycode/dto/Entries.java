@@ -1,4 +1,4 @@
-package com.interswitch.techquest.auth.helpers;
+package com.interswitch.techquest.paycode.dto;
 
 public class Entries {
 	
