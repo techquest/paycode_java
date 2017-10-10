@@ -30,26 +30,11 @@ Generate Bulk paycode
 What this SDK provides for you
 ================================
 
-### Get All Billers  
-	Get a list of all billers supported on our platform.
+### Generate a Paycode By PAN 
+	Generate a paycode by PAN
 
-### Get All Categorys  
-  	Get a list of all categorys and associated billers supported on our platform.
-
-### Get All Billers under a Category  
-	Get a list of all biilers under a particular category.
-	
-### Get Biller Payment Items  
-	Get a list of all payment-items under aparticular Biller.
-
-### Validate Customer  
-	Validates a customer-id under a particular biller.
-
-### Make payment for a customer  
-	Makes a payment for a payment-item for a particular customer.
-	
-### Query the status of a transaction  
-    Query the status of a transaction made in the past based on the Request Reference
+### Generate Paycode in Bulk 
+  	Generate Paycode in Bulk
 
 
 
