@@ -2,12 +2,13 @@ package com.interswitch.techquest.paycode.dto;
 
 public class PaymentToken {
 
-	 String phoneNumber;
-	 String payCode;
-	 String smsStatus;
-	 String expiry;
-	 String surcharge;
-	 String errorMessage;
+	private String phoneNumber;
+	 private String payCode;
+	 private String smsStatus;
+	 private String expiry;
+	 private String surcharge;
+	 private String errorMessage;
+	 
 	public String getPhoneNumber() {
 		return phoneNumber;
 	}

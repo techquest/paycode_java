@@ -1,7 +1,23 @@
 package com.interswitch.techquest.paycode.dto;
 
-public class BulkPaycodeRequest {
+public class BulkPaycodeRequest{
 
+	private String batchSize;
+	private String paymentMethodIdentifier;
+	private String msisdn;
+	private String ttid;
+	private String pan;
+	private String expDate;
+	private String cvv; 
+	private String pin;
+	private String fep;
+	private String defaultTranType;
+	private String defaultPwmChannel;
+	private String defaultOneTimePin;
+	private String defaultAmt;
+	private String defaultTokenLifeInMin;
+	private PaycodeRequest[] paycodeRequests;
+	
 	public BulkPaycodeRequest(String batchSize, String paymentMethodIdentifier, String msisdn, String ttid, 
 			String pan, String expDate, String cvv, String pin, String fep, String defaultTranType, String defaultPwmChannel, 
 			String defaultOneTimePin, String defaultAmt, String defaultTokenLifeInMin, PaycodeRequest[] paycodeRequests)
@@ -23,22 +39,6 @@ public class BulkPaycodeRequest {
 		this.paycodeRequests = paycodeRequests;
 	}
 	
-	String batchSize;
-	String paymentMethodIdentifier;
-	String msisdn;
-	String ttid;
-	String pan;
-	String expDate;
-	String cvv; 
-	String pin;
-	String fep;
-	String defaultTranType;
-	String defaultPwmChannel;
-	String defaultOneTimePin;
-	String defaultAmt;
-	String defaultTokenLifeInMin;
-	
-	PaycodeRequest[] paycodeRequests;
 	
 	public String getBatchSize() {
 		return batchSize;

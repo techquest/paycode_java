@@ -1,6 +1,6 @@
 package com.interswitch.techquest.paycode.dto;
 
-public class PaycodeResponse {
+public class PaycodeResponse extends StatusError{
 	
 	
 	private String subscriberId;

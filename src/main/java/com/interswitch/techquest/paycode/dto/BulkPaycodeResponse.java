@@ -1,9 +1,10 @@
 package com.interswitch.techquest.paycode.dto;
 
-public class BulkPaycodeResponse {
+public class BulkPaycodeResponse extends StatusError{
 
-	String numberOfEntries;
-	PaymentToken[] paymentTokens;
+	private String numberOfEntries;
+	private PaymentToken[] paymentTokens;
+	
 	public String getNumberOfEntries() {
 		return numberOfEntries;
 	}

@@ -28,6 +28,7 @@ public class Constants {
 	public static final String EWALLET_BASE_URL = "api/v1/ewallet/";
 	public static final String PWM_BASE_URL = "api/v1/pwm/subscribers/";
 	public static final String PWM_BULK_BASE_URL = "api/v1/pwm/bulk/";
+	public static final String GET_EWALLET_PAYMENT_METHOD_BASE_URL = "api/v1/ewallet/instruments";
 
 	
 	public static final String CARD_NAME = "default";
@@ -35,4 +36,5 @@ public class Constants {
 	public static final String CHANNEL = "quicktellermobile";
 	public static final String MERCHANT_ID = "QTMOBILE1ISIPIS";
 	public static final String VERSION = "5.1";		
+	public static final String MOBILE_NO  = "mobileNo";
 }

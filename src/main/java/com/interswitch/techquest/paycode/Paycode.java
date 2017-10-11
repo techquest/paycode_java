@@ -6,22 +6,29 @@ import java.util.HashMap;
 import java.util.Random;
 
 import org.json.JSONObject;
+import org.springframework.security.jwt.Jwt;
+import org.springframework.security.jwt.JwtHelper;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.interswitch.techquest.auth.Interswitch;
+import com.interswitch.techquest.paycode.dto.AccountPaycodeRequest;
 import com.interswitch.techquest.paycode.dto.BulkPaycodeRequest;
 import com.interswitch.techquest.paycode.dto.BulkPaycodeResponse;
+import com.interswitch.techquest.paycode.dto.EWalletPaycodeRequest;
+import com.interswitch.techquest.paycode.dto.EWalletPaymentMethodResponse;
 import com.interswitch.techquest.paycode.dto.Entries;
+import com.interswitch.techquest.paycode.dto.PANPaycodeRequest;
 import com.interswitch.techquest.paycode.dto.PaycodeRequest;
 import com.interswitch.techquest.paycode.dto.PaycodeResponse;
 
 public class Paycode {
 
 	private Interswitch interswitch;
-	static String publicCertPath = "E:\\jboss\\jboss-fuse-6.2.1.redhat-084\\etc\\paymentgateway.crt";
+	static String publicCertPath = "paymentgateway.crt";
 	
 	public enum CHANNEL{
-		ATM, POS;
+		ATM, POS, WEB;
 	}
 	
 	public enum TRAN_TYPE{
@@ -47,36 +54,34 @@ public class Paycode {
         interswitch = new Interswitch(clientId, clientSecret, env);
     }
     
+    
+    
     public static void main(String[] args)
     {
-    	/*
-    	 * 
-		String pan = "5060990580000217499";//"0000000000000000";
-		String expDate = "2004";
-		String cvv2 = "111";
-		String pin = "1111";		
-		String amount = "2000000";
-		String ttid = "809";
-		String msisdn = "2348124888436";
-		String paymentMethodIdentifier = "E192F3F3B3BA4596BC9704C44EA801BC";
-		String payWithMobileChannel = "ATM";
-		String tokenLifeTimeInMinutes = "1440";
-		String oneTimePin = "1234";
-    	 */
+    	
     }
     
-    /**
-     * Generate Paycode By PAN
-     * @return
-     * @throws Exception 
-     */
-//    public PaycodeResponse generateByPAN(String msisdn, String ttid, String paymentMethodIdentifier, String pan, String expDate, String cvv, String pin, String amt, String fep, String tranType, String pwmChannel, String tokenLifeInMin, String oneTimePin) throws Exception
-    public PaycodeResponse generateByPAN(PaycodeRequest request) throws Exception
+    public EWalletPaymentMethodResponse getEWalletPaymentMethod(String accessToken) throws Exception
     {
-    	String msisdn = request.getMsisdn();
+    	HashMap<String, String> response = interswitch.sendWithAccessToken(Constants.GET_EWALLET_PAYMENT_METHOD_BASE_URL, Constants.GET, "", accessToken);
+    	String responseCode = response.get(Interswitch.RESPONSE_CODE);
+        String msg = response.get(Interswitch.RESPONSE_MESSAGE);
+        Gson g = new Gson();
+        EWalletPaymentMethodResponse resp = g.fromJson(msg, EWalletPaymentMethodResponse.class);
+        return resp;    	
+    }
+    
+    
+    public PaycodeResponse generateByEWallet(String accessToken, EWalletPaycodeRequest request) throws Exception
+    {
+    	Jwt jwt = JwtHelper.decode(accessToken);
+    	String claims = jwt.getClaims();
+		HashMap<String,Object> claimsMap = new ObjectMapper().readValue(claims, HashMap.class);
+		String msisdn = String.valueOf(claimsMap.get(Constants.MOBILE_NO));
+    	
+    	//String msisdn = request.getMsisdn();
     	String ttid = request.getTtid();
     	String paymentMethodIdentifier = request.getPaymentMethodIdentifier();
-    	String pan = request.getPan();
     	String expDate = request.getExpDate();
     	String cvv = request.getCvv(); 
     	String pin = request.getPin();
@@ -86,13 +91,12 @@ public class Paycode {
     	String pwmChannel = request.getPwmChannel();
     	String tokenLifeInMin = request.getTokenLifeInMin();
     	String oneTimePin = request.getOneTimePin();
-//    	String beneficiaryMsisdn =;
     	
     	HashMap<String,String> additionalSecureData = new HashMap<String, String>();
 		additionalSecureData.put("msisdn",msisdn);
 		additionalSecureData.put("ttid", ttid);
 		additionalSecureData.put("cardName", "default");
-		HashMap<String, String> secureParameters = interswitch.getSecureData(pan, expDate, cvv, pin, additionalSecureData, publicCertPath);
+		HashMap<String, String> secureParameters = interswitch.getSecureData(null, expDate, cvv, pin, additionalSecureData, publicCertPath);
 		String pinData = secureParameters.get(Constants.PINBLOCK);
 		String secureData = secureParameters.get(Constants.SECURE);
 		String macData =  secureParameters.get(Constants.MACDATA);
@@ -106,13 +110,14 @@ public class Paycode {
 		json.put("oneTimePin", oneTimePin);
 		json.put("pinData", pinData);
 		json.put("secure", secureData);
+		json.put("transactionType", tranType);
 		String jsonData = json.toString();
 		
     	HashMap<String, String> extraHeaders = new HashMap<String, String>();
 		extraHeaders.put("frontEndPartnerId", fep);
 		String resourceUrl = Constants.PWM_BASE_URL + msisdn +"/tokens";
 		
-        HashMap<String, String> response = interswitch.send(resourceUrl, Constants.POST, "", extraHeaders);
+        HashMap<String, String> response = interswitch.sendWithAccessToken(resourceUrl, Constants.POST, jsonData, accessToken, extraHeaders);
         String responseCode = response.get(Interswitch.RESPONSE_CODE);
         String msg = response.get(Interswitch.RESPONSE_MESSAGE);
         Gson g = new Gson();
@@ -126,54 +131,55 @@ public class Paycode {
 //     * @return
 //     * @throws Exception 
 //     */
-//    public PaycodeResponse generateByAccount(String msisdn, String ttid, String amt, String tranType, String pwmChannel, String tokenLifeInMin, String oneTimePin) throws Exception
-//    {
-//    	/*
-//    	 * 
-//		String pan = "5060990580000217499";//"0000000000000000";
-//		String expDate = "2004";
-//		String cvv2 = "111";
-//		String pin = "1111";		
-//		String amount = "2000000";
-//		String ttid = "809";
-//		String msisdn = "2348124888436";
-//		String paymentMethodIdentifier = "E192F3F3B3BA4596BC9704C44EA801BC";
-//		String payWithMobileChannel = "ATM";
-//		String tokenLifeTimeInMinutes = "1440";
-//		String oneTimePin = "1234";
-//    	 */
-//    	
-//    	HashMap<String,String> additionalSecureData = new HashMap<String, String>();
-//		additionalSecureData.put("msisdn",msisdn);
-//		additionalSecureData.put("ttid", ttid);
-//		additionalSecureData.put("cardName", "default");
-//		HashMap<String, String> secureParameters = interswitch.getSecureData(pan, expDate, cvv, pin, additionalSecureData, publicCertPath);
-//		String pinData = secureParameters.get(Constants.PINBLOCK);
-//		String secureData = secureParameters.get(Constants.SECURE);
-//		String macData =  secureParameters.get(Constants.MACDATA);
-//		
-//		JSONObject json = new JSONObject();
-//		json.put("amount", amt);
-//		json.put("ttid", ttid);
-//		json.put("paymentMethodIdentifier", paymentMethodIdentifier);
-//		json.put("payWithMobileChannel", pwmChannel);
-//		json.put("tokenLifeTimeInMinutes", tokenLifeInMin);
-//		json.put("oneTimePin", oneTimePin);
-//		json.put("pinData", pinData);
-//		json.put("secure", secureData);
-//		String jsonData = json.toString();
-//		
-//    	HashMap<String, String> extraHeaders = new HashMap<String, String>();
-//		extraHeaders.put("frontEndPartnerId", fep);
-//		String resourceUrl = Constants.PWM_BASE_URL + msisdn +"/tokens";
-//		
-//        HashMap<String, String> response = interswitch.send(resourceUrl, Constants.POST, "", extraHeaders);
-//        String responseCode = response.get(Interswitch.RESPONSE_CODE);
-//        String msg = response.get(Interswitch.RESPONSE_MESSAGE);
-//        Gson g = new Gson();
-//        PaycodeResponse resp = g.fromJson(msg, PaycodeResponse.class);
-//        return resp;    	
-//    }
+    public PaycodeResponse generateByAccount(AccountPaycodeRequest request) throws Exception
+    {
+    	String msisdn = request.getMsisdn();
+    	String ttid = request.getTtid();
+    	String amt = request.getAmt();
+    	String fep = request.getFep();
+    	String tranType = request.getTranType();
+    	String pwmChannel = request.getPwmChannel();
+    	String tokenLifeInMin = request.getTokenLifeInMin();
+    	String paymentMethodTypeCode = request.getPaymentMethodTypeCode();
+    	String paymentMethodCode = request.getPaymentMethodCode();
+    	String providerToken = request.getProviderToken();
+    	String accountNo = request.getAccountNo();
+    	String accountType = request.getAccountType();
+    	String transactionRef = request.getTransactionRef();
+    	String autoEnroll = request.getAutoEnroll();
+    	
+    	HashMap<String,String> additionalSecureData = new HashMap<String, String>();
+		additionalSecureData.put("msisdn",msisdn);
+		additionalSecureData.put("ttid", ttid);
+		additionalSecureData.put("cardName", "default");
+		
+		JSONObject json = new JSONObject();
+		json.put("amount", amt);
+		json.put("ttid", ttid);
+		json.put("payWithMobileChannel", pwmChannel);
+		json.put("tokenLifeTimeInMinutes", tokenLifeInMin);
+		json.put("paymentMethodTypeCode", paymentMethodTypeCode);
+		json.put("paymentMethodCode", paymentMethodCode);
+		json.put("providerToken", providerToken);
+		json.put("accountNo", accountNo);
+		json.put("accountType", accountType);
+		json.put("transactionRef", transactionRef);
+		json.put("autoEnroll", autoEnroll);
+		json.put("transactionType", tranType);
+		String jsonData = json.toString();
+		
+    	HashMap<String, String> extraHeaders = new HashMap<String, String>();
+		extraHeaders.put("frontEndPartnerId", fep);
+		String resourceUrl = Constants.PWM_BASE_URL + msisdn +"/tokens";
+		
+        HashMap<String, String> response = interswitch.send(resourceUrl, Constants.POST, jsonData);
+        String responseCode = response.get(Interswitch.RESPONSE_CODE);
+        String msg = response.get(Interswitch.RESPONSE_MESSAGE);
+        Gson g = new Gson();
+        PaycodeResponse resp = g.fromJson(msg, PaycodeResponse.class);
+        return resp;  
+    	  	
+    }
 
     
     /**
@@ -250,6 +256,7 @@ public class Paycode {
 		json.put("tokenLifeTimeInMinutes", tokenLifeInMin);
 		json.put("ttid", ttid);
 		json.put("macData", macData);
+		json.put("transactionType", tranType);
 		String jsonData = json.toString();
 				
         HashMap<String, String> response = interswitch.send(resourceUrl, Constants.POST, jsonData, extraHeaders);
@@ -261,4 +268,61 @@ public class Paycode {
         
     }
 
+
+    
+    /**
+     * Generate Paycode By PAN
+     * @return
+     * @throws Exception 
+     */
+    public PaycodeResponse generateByPAN(PANPaycodeRequest request) throws Exception
+    {
+    	String msisdn = request.getMsisdn();
+    	String ttid = request.getTtid();
+//    	String paymentMethodIdentifier = request.getPaymentMethodIdentifier();
+    	String pan = request.getPan();
+    	String expDate = request.getExpDate();
+    	String cvv = request.getCvv(); 
+    	String pin = request.getPin();
+    	String amt = request.getAmt();
+    	String fep = request.getFep();
+    	String tranType = request.getTranType();
+    	String pwmChannel = request.getPwmChannel();
+    	String tokenLifeInMin = request.getTokenLifeInMin();
+    	String oneTimePin = request.getOneTimePin();
+    	
+    	HashMap<String,String> additionalSecureData = new HashMap<String, String>();
+		additionalSecureData.put("msisdn",msisdn);
+		additionalSecureData.put("ttid", ttid);
+		additionalSecureData.put("cardName", "default");
+		HashMap<String, String> secureParameters = interswitch.getSecureData(pan, expDate, cvv, pin, additionalSecureData, publicCertPath);
+		String pinData = secureParameters.get(Constants.PINBLOCK);
+		String secureData = secureParameters.get(Constants.SECURE);
+		String macData =  secureParameters.get(Constants.MACDATA);
+		
+		JSONObject json = new JSONObject();
+		json.put("amount", amt);
+		json.put("ttid", ttid);
+//		json.put("paymentMethodIdentifier", paymentMethodIdentifier);
+		json.put("payWithMobileChannel", pwmChannel);
+		json.put("tokenLifeTimeInMinutes", tokenLifeInMin);
+		json.put("oneTimePin", oneTimePin);
+		json.put("pinData", pinData);
+		json.put("secure", secureData);
+		json.put("transactionType", tranType);
+		String jsonData = json.toString();
+		
+    	HashMap<String, String> extraHeaders = new HashMap<String, String>();
+		extraHeaders.put("frontEndPartnerId", fep);
+		String resourceUrl = Constants.PWM_BASE_URL + msisdn +"/tokens";
+		
+        HashMap<String, String> response = interswitch.send(resourceUrl, Constants.POST, jsonData, extraHeaders);
+        String responseCode = response.get(Interswitch.RESPONSE_CODE);
+        String msg = response.get(Interswitch.RESPONSE_MESSAGE);
+        Gson g = new Gson();
+        PaycodeResponse resp = g.fromJson(msg, PaycodeResponse.class);
+        return resp;    	
+    }
+    
+    
 }

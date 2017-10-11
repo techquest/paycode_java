@@ -19,19 +19,20 @@ A paycode is a one time code used for withdrawing cash at the ATM. It can also b
 ### Bulk Paycode  
 A paycode is a one time code used for withdrawing cash at the ATM. It can also be used to make payment on a POS terminal. You can withdraw Paycode at the folloing banks ATM: GTB, Fidelity,
 
-Generate Paycode from account
-Generate Paycode from PAN
-Generate Bulk paycode
-
-
 
 
 
 What this SDK provides for you
 ================================
 
-### Generate a Paycode By PAN 
-	Generate a paycode by PAN
+### Generate Paycode from an eWallet Account
+  	Generate a Paycode from an eWallet Account
+
+### Generate a Paycode by PAN 
+	Generate a paycode from a PAN
+
+### Generate Paycode by Bank Account
+  	Generate a Paycode from a bank account
 
 ### Generate Paycode in Bulk 
   	Generate Paycode in Bulk

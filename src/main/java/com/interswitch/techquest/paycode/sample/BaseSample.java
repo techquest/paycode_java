@@ -12,9 +12,9 @@ public class BaseSample {
      * Sample Sandbox Credentials
      */
 
-    private final static String clientId = "IKIAD8CEC8152D8E720E2CC7961C8EBBCD391A0DA0B6";
-    private final static String clientSecret = "79EsDAYDw1mPiLre/z5RiqfH0XgMd8n2uKkThJ9YyA4=";
+    private final static String clientId = "IKIA9614B82064D632E9B6418DF358A6A4AEA84D7218";
+    private final static String clientSecret = "XCTiBtLy1G9chAnyg0z3BcaFK4cVpwDg/GTw2EmjTZ8=";
 
-    static Paycode paycode = new Paycode(clientId, clientSecret, Interswitch.ENV_SANDBOX);
+    protected static Paycode paycode = new Paycode(clientId, clientSecret, Interswitch.ENV_SANDBOX);
     
 }

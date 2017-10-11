@@ -1,14 +1,20 @@
 package com.interswitch.techquest.paycode.sample;
 
+import com.interswitch.techquest.auth.Interswitch;
 import com.interswitch.techquest.paycode.Paycode;
 import com.interswitch.techquest.paycode.dto.BulkPaycodeRequest;
 import com.interswitch.techquest.paycode.dto.BulkPaycodeResponse;
+import com.interswitch.techquest.paycode.dto.Error;
 import com.interswitch.techquest.paycode.dto.PaycodeRequest;
 import com.interswitch.techquest.paycode.dto.PaycodeResponse;
 import com.interswitch.techquest.paycode.dto.PaymentToken;
 
 public class GenerateBulkPaycodeByPAN  extends BaseSample {
 
+	private final static String clientId = "IKIAD8CEC8152D8E720E2CC7961C8EBBCD391A0DA0B6";
+    private final static String clientSecret = "79EsDAYDw1mPiLre/z5RiqfH0XgMd8n2uKkThJ9YyA4=";
+    protected static Paycode paycode = new Paycode(clientId, clientSecret, Interswitch.ENV_SANDBOX);
+    
     public static void main(String[] args) {
 
         try {
@@ -39,18 +45,28 @@ public class GenerateBulkPaycodeByPAN  extends BaseSample {
     		paycodeRequests[1] = paycodeRequest2;
     		BulkPaycodeRequest bulkPaycodeRequest = new BulkPaycodeRequest(batchSize, paymentMethodIdentifier, beneficiaryMsisdn, ttid, pan, expDate, cvv, pin, fep, defaultTranType, defaultPwmChannel, defaultOneTimePin, defaultAmt, defaultTokenLifeInMin, paycodeRequests);
     		BulkPaycodeResponse bulkPaycodeResponse = paycode.generateBulk(bulkPaycodeRequest);
-    		String entries = bulkPaycodeResponse.getNumberOfEntries();
-    		PaymentToken[] paymentTokens = bulkPaycodeResponse.getPaymentTokens();
     		
-    		for(PaymentToken paymentToken : paymentTokens)
+    		if(bulkPaycodeResponse != null && bulkPaycodeResponse.getErrors() == null)
     		{
-    			 String paycodeToken = paymentToken.getPayCode();
-    			 String subscriber = paymentToken.getPhoneNumber();
-    			 String expire = paymentToken.getExpiry();
-    			 
-    			 System.out.println("Paycode: " + paycodeToken);
-    			 System.out.println("Subscriber: " + subscriber);
-    			 System.out.println("Expire: " + expire);
+    			String entries = bulkPaycodeResponse.getNumberOfEntries();
+        		PaymentToken[] paymentTokens = bulkPaycodeResponse.getPaymentTokens();
+        		
+        		for(PaymentToken paymentToken : paymentTokens)
+        		{
+        			 String paycodeToken = paymentToken.getPayCode();
+        			 String subscriber = paymentToken.getPhoneNumber();
+        			 String expire = paymentToken.getExpiry();
+        			 
+        			 System.out.println("Paycode: " + paycodeToken);
+        			 System.out.println("Subscriber: " + subscriber);
+        			 System.out.println("Expire: " + expire);
+        		}
+    		}
+    		else
+    		{
+    			Error[] errors = bulkPaycodeResponse.getErrors();
+    			Error error = errors[0];
+    			System.out.println("Error Msg: " + error.getMessage());
     		}
            
             
