@@ -19,7 +19,8 @@ public class Constants {
 	public static final String CLIENT_ID = "IKIAF6C068791F465D2A2AA1A3FE88343B9951BAC9C3";
 	public static final String CLIENT_SECRET = "FTbMeBD7MtkGBQJw1XoM74NaikuPL13Sxko1zb0DMjI=";
 	
-	public static final String CERT_PATH = "../ewallet/src/main/resources/paymentgateway.crt";
+	//public static final String CERT_PATH = "../ewallet/src/main/resources/paymentgateway.crt";
+	public static String CERT_PATH = "paymentgateway.crt";
 	
 	public static final String BASE_URL ="http://172.26.40.115:9080/";
 	public static final String VERVE_BASE_URL = "api/v1/verve/wallet/subscribers/";

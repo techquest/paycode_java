@@ -13,6 +13,7 @@ public class EWalletPaycodeRequest extends PaycodeRequest{
 	
 	
 	
+	
 	/***
 	 * Use this constructor when creating Paycode request to generate from an EWallet Payment Method
 	 * @param ttid
@@ -27,9 +28,10 @@ public class EWalletPaycodeRequest extends PaycodeRequest{
 	 * @param tokenLifeInMin
 	 * @param oneTimePin
 	 */
-	public EWalletPaycodeRequest(String ttid, String paymentMethodIdentifier, String expDate, String cvv, String pin, String amt, String fep, String tranType, String pwmChannel, String tokenLifeInMin, String oneTimePin)
+	public EWalletPaycodeRequest(String msisdn, String ttid, String paymentMethodIdentifier, String expDate, String cvv, String pin, String amt, String fep, String tranType, String pwmChannel, String codeGenerationChannel, String tokenLifeInMin, String oneTimePin)
 	{
-		super(ttid, amt, fep, tranType, pwmChannel, tokenLifeInMin, oneTimePin);
+		super(ttid, amt, fep, tranType, pwmChannel, codeGenerationChannel, tokenLifeInMin, oneTimePin);
+		this.msisdn = msisdn;
 		this.ttid = ttid;
 		this.paymentMethodIdentifier = paymentMethodIdentifier;
 		this.expDate = expDate;

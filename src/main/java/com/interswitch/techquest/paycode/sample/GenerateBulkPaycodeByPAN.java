@@ -25,13 +25,13 @@ public class GenerateBulkPaycodeByPAN  extends BaseSample {
     		String pin = "1111";    		
     		String amt = "2000000"; // Minor denomination. This is same as 20,000
     		String ttid = "809";
-    		String fep = "445";
+    		String fep = "WEMA";
     		String msisdn = "2348124888436";
     		String paymentMethodIdentifier = "E192F3F3B3BA4596BC9704C44EA801BC"; // Do we need this?
     		String oneTimePin = "1234";
     		String defaultAmt = "2000000";
     		String defaultPwmChannel = Paycode.CHANNEL.ATM.name();
-    		String defaultTranType = Paycode.TRAN_TYPE.WITHDRWAL.name();
+    		String defaultTranType = Paycode.TRAN_TYPE.Withdrawal.name();
     		String defaultTokenLifeInMin = "1440";
     		String defaultOneTimePin = "1234";
     		String beneficiaryMsisdn = "2348124888436";

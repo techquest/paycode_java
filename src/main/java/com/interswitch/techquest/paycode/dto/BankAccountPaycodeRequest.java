@@ -1,6 +1,6 @@
 package com.interswitch.techquest.paycode.dto;
 
-public class AccountPaycodeRequest extends PaycodeRequest{
+public class BankAccountPaycodeRequest extends PaycodeRequest{
 
 
 	protected String msisdn;
@@ -31,10 +31,10 @@ public class AccountPaycodeRequest extends PaycodeRequest{
 	 * @param tokenLifeInMin
 	 * @param oneTimePin
 	 */
-	public AccountPaycodeRequest(String msisdn, String accountNo, String accountType, String paymentMethodTypeCode, String paymentMethodCode, String providerToken, String transactionRef, String autoEnroll,
-			String ttid, String amt, String fep, String tranType, String pwmChannel, String tokenLifeInMin, String oneTimePin)
+	public BankAccountPaycodeRequest(String msisdn, String accountNo, String accountType, String paymentMethodTypeCode, String paymentMethodCode, String providerToken, String transactionRef, String autoEnroll,
+			String ttid, String amt, String fep, String tranType, String pwmChannel, String codeGenerationChannel, String tokenLifeInMin, String oneTimePin)
 	{		
-		super(ttid, amt, fep, tranType, pwmChannel, tokenLifeInMin, oneTimePin);
+		super(ttid, amt, fep, tranType, pwmChannel, codeGenerationChannel, tokenLifeInMin, oneTimePin);
 		this.msisdn = msisdn;
 		this.accountNo = accountNo;
 		this.accountType = accountType;

@@ -10,15 +10,17 @@ public class PaycodeRequest {
 	protected String tokenLifeInMin;
 	protected String oneTimePin;
 	protected String beneficiaryMsisdn;
+	protected String codeGenerationChannel;
 	
 	
-	public PaycodeRequest(String ttid, String amt, String fep, String tranType, String pwmChannel, String tokenLifeInMin, String oneTimePin)
+	public PaycodeRequest(String ttid, String amt, String fep, String tranType, String pwmChannel, String codeGenerationChannel, String tokenLifeInMin, String oneTimePin)
 	{
 		this.ttid = ttid;
 		this.amt = amt;
 		this.fep = fep;
 		this.tranType = tranType;
 		this.pwmChannel = pwmChannel;
+		this.codeGenerationChannel = codeGenerationChannel;
 		this.tokenLifeInMin = tokenLifeInMin;
 		this.oneTimePin = oneTimePin;
 	}
@@ -131,6 +133,16 @@ public class PaycodeRequest {
 
 	public void setBeneficiaryMsisdn(String beneficiaryMsisdn) {
 		this.beneficiaryMsisdn = beneficiaryMsisdn;
+	}
+
+
+	public String getCodeGenerationChannel() {
+		return codeGenerationChannel;
+	}
+
+
+	public void setCodeGenerationChannel(String codeGenerationChannel) {
+		this.codeGenerationChannel = codeGenerationChannel;
 	}
 	
 

@@ -25,9 +25,9 @@ public class PANPaycodeRequest extends PaycodeRequest{
 	 * @param tokenLifeInMin
 	 * @param oneTimePin
 	 */
-	public PANPaycodeRequest(String msisdn, String ttid, String pan, String expDate, String cvv, String pin, String amt, String fep, String tranType, String pwmChannel, String tokenLifeInMin, String oneTimePin)
+	public PANPaycodeRequest(String msisdn, String ttid, String pan, String expDate, String cvv, String pin, String amt, String fep, String tranType, String pwmChannel, String codeGenerationChannel, String tokenLifeInMin, String oneTimePin)
 	{
-		super(ttid, amt, fep, tranType, pwmChannel, tokenLifeInMin, oneTimePin);
+		super(ttid, amt, fep, tranType, pwmChannel, codeGenerationChannel, tokenLifeInMin, oneTimePin);
 		this.msisdn = msisdn; 
 		this.pan = pan;
 		this.expDate = expDate;
