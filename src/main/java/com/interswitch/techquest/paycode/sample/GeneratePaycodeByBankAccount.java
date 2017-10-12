@@ -3,7 +3,6 @@ package com.interswitch.techquest.paycode.sample;
 import com.interswitch.techquest.paycode.Paycode;
 import com.interswitch.techquest.paycode.dto.BankAccountPaycodeRequest;
 import com.interswitch.techquest.paycode.dto.Error;
-import com.interswitch.techquest.paycode.dto.PANPaycodeRequest;
 import com.interswitch.techquest.paycode.dto.PaycodeResponse;
 
 public class GeneratePaycodeByBankAccount  extends BaseSample {
