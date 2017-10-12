@@ -90,12 +90,13 @@ public class Paycode {
     	String pwmChannel = request.getPwmChannel();
     	String tokenLifeInMin = request.getTokenLifeInMin();
     	String oneTimePin = request.getOneTimePin();
+    	int macVer = 12;
     	
     	HashMap<String,String> additionalSecureData = new HashMap<String, String>();
 		additionalSecureData.put("msisdn",msisdn);
 		additionalSecureData.put("ttid", ttid);
 		additionalSecureData.put("cardName", "default");
-		HashMap<String, String> secureParameters = interswitch.getSecureData(null, expDate, cvv, pin, additionalSecureData, Constants.CERT_PATH);
+		HashMap<String, String> secureParameters = interswitch.getSecureData(null, expDate, cvv, pin, additionalSecureData, Constants.CERT_PATH, macVer);
 		String pinData = secureParameters.get(Constants.PINBLOCK);
 		String secureData = secureParameters.get(Constants.SECURE);
 		String macData =  secureParameters.get(Constants.MACDATA);
@@ -117,7 +118,7 @@ public class Paycode {
 		String resourceUrl = Constants.PWM_BASE_URL + msisdn +"/tokens";
 		
 //        HashMap<String, String> response = interswitch.sendWithAccessToken(resourceUrl, Constants.POST, jsonData, accessToken, extraHeaders);
-        HashMap<String, String> response = interswitch.send(resourceUrl, Constants.POST, jsonData, extraHeaders);
+        HashMap<String, String> response = interswitch.sendWithInterswitchAuth(resourceUrl, Constants.POST, jsonData, extraHeaders);
         
         String responseCode = response.get(Interswitch.RESPONSE_CODE);
         String msg = response.get(Interswitch.RESPONSE_MESSAGE);
@@ -177,7 +178,7 @@ public class Paycode {
 		
 		String resourceUrl = Constants.PWM_BASE_URL + msisdn +"/tokens";
 		
-        HashMap<String, String> response = interswitch.send(resourceUrl, Constants.POST, jsonData, extraHeaders);
+        HashMap<String, String> response = interswitch.sendWithInterswitchAuth(resourceUrl, Constants.POST, jsonData, extraHeaders);
         String responseCode = response.get(Interswitch.RESPONSE_CODE);
         String msg = response.get(Interswitch.RESPONSE_MESSAGE);
         Gson g = new Gson();
@@ -234,7 +235,7 @@ public class Paycode {
   	extraHeaders.put("FrontEndPartnerId", fep);
   	String resourceUrl = Constants.PWM_BASE_URL + msisdn +"/tokens";
 		
-      HashMap<String, String> response = interswitch.send(resourceUrl, Constants.POST, jsonData, extraHeaders);
+      HashMap<String, String> response = interswitch.sendWithInterswitchAuth(resourceUrl, Constants.POST, jsonData, extraHeaders);
       String responseCode = response.get(Interswitch.RESPONSE_CODE);
       String msg = response.get(Interswitch.RESPONSE_MESSAGE);
       Gson g = new Gson();
@@ -253,7 +254,6 @@ public class Paycode {
     	
     	String msisdn = bulkRequest.getMsisdn();
     	String ttid = bulkRequest.getTtid();
-    	String paymentMethodIdentifier = bulkRequest.getPaymentMethodIdentifier();
     	String pan = bulkRequest.getPan();
     	String expDate = bulkRequest.getExpDate();
     	String cvv = bulkRequest.getCvv(); 
@@ -265,6 +265,7 @@ public class Paycode {
     	String tokenLifeInMin = bulkRequest.getDefaultTokenLifeInMin();
     	String oneTimePin = bulkRequest.getDefaultOneTimePin();
     	PaycodeRequest[] requests = bulkRequest.getPaycodeRequests();
+    	int macVer = 12;
     	
     	
     	HashMap<String, String> extraHeaders = new HashMap<String, String>();
@@ -292,7 +293,7 @@ public class Paycode {
 		additionalSecureData.put("amt", amt);
 		list.addAll(Arrays.asList(entries));
 		
-		HashMap<String, String> secureParameters = interswitch.getSecureData(pan, expDate, cvv, pin, additionalSecureData, Constants.CERT_PATH);
+		HashMap<String, String> secureParameters = interswitch.getSecureData(pan, expDate, cvv, pin, additionalSecureData, Constants.CERT_PATH, macVer);
 		String pinBlock = secureParameters.get(Constants.PINBLOCK);
 		String secureData = secureParameters.get(Constants.SECURE);
 		String macData = secureParameters.get(Constants.MACDATA);
@@ -310,7 +311,6 @@ public class Paycode {
 		json.put("defaultOneTimePin", oneTimePin);
 		json.put("entries", list);
 		json.put("macData", macData);
-		json.put("paymentMethodIdentifier", paymentMethodIdentifier);
 		json.put("pinBlock", pinBlock);
 		json.put("referenceId", referenceId);
 		json.put("secure", secureData);
@@ -321,7 +321,7 @@ public class Paycode {
 		json.put("transactionType", tranType);
 		String jsonData = json.toString();
 				
-        HashMap<String, String> response = interswitch.send(resourceUrl, Constants.POST, jsonData, extraHeaders);
+        HashMap<String, String> response = interswitch.sendWithInterswitchAuth(resourceUrl, Constants.POST, jsonData, extraHeaders);
         String responseCode = response.get(Interswitch.RESPONSE_CODE);
         String msg = response.get(Interswitch.RESPONSE_MESSAGE);
         Gson g = new Gson();
@@ -376,7 +376,7 @@ public class Paycode {
 //		extraHeaders.put("FrontEndPartnerId", fep);
 //		String resourceUrl = Constants.PWM_BASE_URL + msisdn +"/tokens";
 //		
-//        HashMap<String, String> response = interswitch.send(resourceUrl, Constants.POST, jsonData, extraHeaders);
+//        HashMap<String, String> response = interswitch.sendWithInterswitchAuth(resourceUrl, Constants.POST, jsonData, extraHeaders);
 //        String responseCode = response.get(Interswitch.RESPONSE_CODE);
 //        String msg = response.get(Interswitch.RESPONSE_MESSAGE);
 //        Gson g = new Gson();

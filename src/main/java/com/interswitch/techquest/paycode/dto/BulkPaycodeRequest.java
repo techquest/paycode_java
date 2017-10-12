@@ -3,7 +3,6 @@ package com.interswitch.techquest.paycode.dto;
 public class BulkPaycodeRequest{
 
 	private String batchSize;
-	private String paymentMethodIdentifier;
 	private String msisdn;
 	private String ttid;
 	private String pan;
@@ -18,12 +17,11 @@ public class BulkPaycodeRequest{
 	private String defaultTokenLifeInMin;
 	private PaycodeRequest[] paycodeRequests;
 	
-	public BulkPaycodeRequest(String batchSize, String paymentMethodIdentifier, String msisdn, String ttid, 
+	public BulkPaycodeRequest(String batchSize, String msisdn, String ttid, 
 			String pan, String expDate, String cvv, String pin, String fep, String defaultTranType, String defaultPwmChannel, 
 			String defaultOneTimePin, String defaultAmt, String defaultTokenLifeInMin, PaycodeRequest[] paycodeRequests)
 	{
 		this.batchSize = batchSize;
-		this.paymentMethodIdentifier = paymentMethodIdentifier;
 		this.msisdn = msisdn;
 		this.ttid = ttid;
 		this.pan = pan;
@@ -52,14 +50,6 @@ public class BulkPaycodeRequest{
 	public void setDefaultOneTimePin(String defaultOneTimePin) {
 		this.defaultOneTimePin = defaultOneTimePin;
 	}
-	public String getPaymentMethodIdentifier() {
-		return paymentMethodIdentifier;
-	}
-	public void setPaymentMethodIdentifier(String paymentMethodIdentifier) {
-		this.paymentMethodIdentifier = paymentMethodIdentifier;
-	}
-	
-	
 	public String getMsisdn() {
 		return msisdn;
 	}

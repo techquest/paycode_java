@@ -27,9 +27,8 @@ public class GenerateBulkPaycodeByPAN  extends BaseSample {
     		String ttid = "809";
     		String fep = "WEMA";
     		String msisdn = "2348124888436";
-    		String paymentMethodIdentifier = "E192F3F3B3BA4596BC9704C44EA801BC"; // Do we need this?
     		String oneTimePin = "1234";
-    		String defaultAmt = "2000000";
+    		String defaultAmt = "4000000";
     		String defaultPwmChannel = Paycode.CHANNEL.ATM.name();
     		String defaultTranType = Paycode.TRAN_TYPE.Withdrawal.name();
     		String defaultTokenLifeInMin = "1440";
@@ -43,7 +42,7 @@ public class GenerateBulkPaycodeByPAN  extends BaseSample {
     		
     		paycodeRequests[0] = paycodeRequest1;
     		paycodeRequests[1] = paycodeRequest2;
-    		BulkPaycodeRequest bulkPaycodeRequest = new BulkPaycodeRequest(batchSize, paymentMethodIdentifier, beneficiaryMsisdn, ttid, pan, expDate, cvv, pin, fep, defaultTranType, defaultPwmChannel, defaultOneTimePin, defaultAmt, defaultTokenLifeInMin, paycodeRequests);
+    		BulkPaycodeRequest bulkPaycodeRequest = new BulkPaycodeRequest(batchSize, msisdn, ttid, pan, expDate, cvv, pin, fep, defaultTranType, defaultPwmChannel, defaultOneTimePin, defaultAmt, defaultTokenLifeInMin, paycodeRequests);
     		BulkPaycodeResponse bulkPaycodeResponse = paycode.generateBulk(bulkPaycodeRequest);
     		
     		if(bulkPaycodeResponse != null && bulkPaycodeResponse.getErrors() == null)
