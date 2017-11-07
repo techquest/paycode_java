@@ -11,24 +11,23 @@ public class GeneratePaycodeByBankAccount  extends BaseSample {
 
         try {
         	
-        	String accountNo = "0001122322";
+        	String accountNo = "999999999";
         	String accountType = "Savings";
         	String paymentMethodTypeCode = "VMP";
-        	String paymentMethodCode = "WEMA";
-        	String providerToken = "3214253";
+        	String paymentMethodCode = "FBN";
+        	String fep = "011";
         	String transactionRef = "15051";
-        	String autoEnroll = "false";
-    		String amt = "2000000"; // Minor denomination. This is same as 20,000
+        	String autoEnroll = "true";
+        	String msisdn = "2348124888436";
     		String ttid = "809";
-    		String fep = "445";
-    		String msisdn = "2348124888436";
+    		String tokenLifeInMin = "1440";
+    		String oneTimePin = "1234";
+    		String amt = "2000000"; // Minor denomination. This is same as 20,000
     		String pwmChannel = Paycode.CHANNEL.ATM.name();
     		String codeGenerationChannel = Paycode.CHANNEL.Web.name();
     		String tranType = Paycode.TRAN_TYPE.Withdrawal.name();
-    		String tokenLifeInMin = "1440";
-    		String oneTimePin = "1234";
-
-    		BankAccountPaycodeRequest paycodeRequest = new BankAccountPaycodeRequest(msisdn, accountNo, accountType, paymentMethodTypeCode, paymentMethodCode, providerToken, transactionRef, autoEnroll, ttid, amt, fep, tranType, pwmChannel, codeGenerationChannel, tokenLifeInMin, oneTimePin);
+    		
+    		BankAccountPaycodeRequest paycodeRequest = new BankAccountPaycodeRequest(msisdn, accountNo, accountType, paymentMethodTypeCode, paymentMethodCode, null, transactionRef, autoEnroll, ttid, amt, fep, tranType, pwmChannel, codeGenerationChannel, tokenLifeInMin, oneTimePin);
     		PaycodeResponse paycodeResponse = paycode.generateByBankAccount(paycodeRequest);
     		if(paycodeResponse != null && paycodeResponse.getErrors() == null)
     		{

@@ -23,25 +23,33 @@ public class GenerateBulkPaycodeByPAN  extends BaseSample {
     		String expDate = "2004";
     		String cvv = "111";
     		String pin = "1111";    		
-    		String amt = "2000000"; // Minor denomination. This is same as 20,000
+    		int amtInt = 2000000; // Minor denomination. This is same as 20,000
+    		String amt = String.valueOf(amtInt); // Minor denomination. This is same as 20,000
     		String ttid = "809";
     		String fep = "WEMA";
     		String msisdn = "2348124888436";
     		String oneTimePin = "1234";
-    		String defaultAmt = "4000000";
     		String defaultPwmChannel = Paycode.CHANNEL.ATM.name();
     		String defaultTranType = Paycode.TRAN_TYPE.Withdrawal.name();
     		String defaultTokenLifeInMin = "1440";
     		String defaultOneTimePin = "1234";
     		String beneficiaryMsisdn = "2348124888436";
-    		String batchSize = "2";
+    		int batchSizeInt = 5;
+    		String batchSize = String.valueOf(batchSizeInt);
+    		String defaultAmt = String.valueOf(amtInt * batchSizeInt);
     		
-    		PaycodeRequest[] paycodeRequests = new PaycodeRequest[2];
+    		PaycodeRequest[] paycodeRequests = new PaycodeRequest[batchSizeInt];
     		PaycodeRequest paycodeRequest1 = new PaycodeRequest(amt, beneficiaryMsisdn, oneTimePin);
     		PaycodeRequest paycodeRequest2 = new PaycodeRequest(amt, beneficiaryMsisdn, oneTimePin);
+    		PaycodeRequest paycodeRequest3 = new PaycodeRequest(amt, beneficiaryMsisdn, oneTimePin);
+    		PaycodeRequest paycodeRequest4 = new PaycodeRequest(amt, beneficiaryMsisdn, oneTimePin);
+    		PaycodeRequest paycodeRequest5 = new PaycodeRequest(amt, beneficiaryMsisdn, oneTimePin);
     		
     		paycodeRequests[0] = paycodeRequest1;
     		paycodeRequests[1] = paycodeRequest2;
+    		paycodeRequests[2] = paycodeRequest3;
+    		paycodeRequests[3] = paycodeRequest4;
+    		paycodeRequests[4] = paycodeRequest5;
     		BulkPaycodeRequest bulkPaycodeRequest = new BulkPaycodeRequest(batchSize, msisdn, ttid, pan, expDate, cvv, pin, fep, defaultTranType, defaultPwmChannel, defaultOneTimePin, defaultAmt, defaultTokenLifeInMin, paycodeRequests);
     		BulkPaycodeResponse bulkPaycodeResponse = paycode.generateBulk(bulkPaycodeRequest);
     		
